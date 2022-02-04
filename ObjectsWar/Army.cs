@@ -9,16 +9,15 @@ namespace ObjectsWar
     public class Army
     {
         public string Name { get; set; }
-        public int TotalHealth { get; set; }
-        public int TotalHitPoint { get; set; }
         public List<Soldier> Soldiers { get; set; }
         public List<Soldier> ProduceSoldiers(int tankmanCount,int rankerCount)
         {
             List<Soldier> soldiers = new List<Soldier>();
             Soldier tankman = new Tankman();
             Soldier ranker = new Ranker();
+            CreateSoldier(rankerCount, soldiers, ranker);
             CreateSoldier(tankmanCount,soldiers, tankman);
-            CreateSoldier(rankerCount,soldiers, ranker);
+            
           
             return soldiers;
         }

@@ -10,30 +10,51 @@ namespace ObjectsWar
     {
         public Army StartTheWar(Army myArmy, Army enemy)
         {
-            CalculateHealthAndHitPoint(myArmy);
-            CalculateHealthAndHitPoint(enemy);
-            var winner=Battle(myArmy, enemy);
-
+            var winner = Battle(myArmy, enemy);
             return winner;
         }
 
         private static Army Battle(Army myArmy, Army enemy)
-        {
-            while (myArmy.TotalHealth > 0 && enemy.TotalHealth > 0)
+        {           
+            while (myArmy.Soldiers.Count > 0 && enemy.Soldiers.Count > 0)
             {
-                enemy.TotalHealth -= myArmy.TotalHitPoint;
-                myArmy.TotalHealth -= enemy.TotalHitPoint;
+                var mySoldiers = myArmy.Soldiers;
+                var enemySoldiers = enemy.Soldiers;
+                int i = 0;
+                ClashTheSoldiers(mySoldiers, enemySoldiers, i);
+                RemoveDeadSoldier(mySoldiers, enemySoldiers, i);
             }
-            return myArmy.TotalHealth > 0 ? myArmy : enemy;
+            return myArmy.Soldiers.Count > 0 ? myArmy : enemy;
         }
 
-        private void CalculateHealthAndHitPoint(Army army)
+        private static void ClashTheSoldiers(List<Soldier> mySoldiers, List<Soldier> enemySoldiers, int i)
         {
-            foreach (var soldier in army.Soldiers)
+            while (enemySoldiers[i].Health > 0 && mySoldiers[i].Health > 0)
             {
-                army.TotalHealth += soldier.Health + soldier.Armor;
-                army.TotalHitPoint += soldier.Weapon.HitPoint;
+                enemySoldiers[i].Health -= mySoldiers[i].Weapon.HitPoint;
+                mySoldiers[i].Health = (mySoldiers[i].Armor + mySoldiers[i].Health) - enemySoldiers[i].Weapon.HitPoint;
             }
         }
+
+        private static void RemoveDeadSoldier(List<Soldier> mySoldiers, List<Soldier> enemySoldiers, int i)
+        {
+            if (mySoldiers[i].Health > enemySoldiers[i].Health)
+            {
+                enemySoldiers.Remove(enemySoldiers[i]);
+                if (enemySoldiers.Count > 0)
+                {
+                    enemySoldiers[i].Health = 100;
+                }
+            }
+            else
+            {
+                mySoldiers.Remove(mySoldiers[i]);
+                if (mySoldiers.Count > 0)
+                {
+                    mySoldiers[i].Health = 100;
+                }
+            }
+        }
+
     }
 }
